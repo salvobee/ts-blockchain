@@ -1,5 +1,4 @@
-// Transfer of funds between two wallets
-import * as crypto from "crypto";
+import * as crypto from 'crypto';
 
 class Transaction {
   constructor(
@@ -13,8 +12,10 @@ class Transaction {
   }
 }
 
-// Individual block on the chain
 class Block {
+
+  public nonce = Math.round(Math.random() * 999999999)
+
   constructor(
       public prevHash: string,
       public transaction: Transaction,
@@ -29,40 +30,52 @@ class Block {
   }
 }
 
-// The blockchain
 class Chain {
-  // Singleton instance
   public static instance = new Chain();
 
   chain: Block[];
 
   constructor() {
-    this.chain = [
-      // Genesis block
-      new Block('', new Transaction(100, 'genesis', 'satoshi'))
-    ];
+    this.chain = [new Block('', new Transaction(100, 'genesis', 'satoshi'))]
   }
 
-  // Most recent block
   get lastBlock() {
     return this.chain[this.chain.length - 1];
   }
 
-  // Add a new block to the chain if has valid signature
-  addBlock(transaction: Transaction, senderPublicKey: string, signature: Buffer) {
-    const verify = crypto.createVerify('SHA256');
-    verify.update(transaction.toString());
+  mine(nonce: number) {
+    let solution = 1;
+    console.log('⛏️ mining...');
 
-    const isValid = verify.verify(senderPublicKey, signature);
+    while(true) {
+      const hash = crypto.createHash('MD5');
+      hash.update((nonce + solution).toString()).end();
+
+      const attempt = hash.digest('hex');
+
+      if(attempt.substr(0,4) === '0000') {
+        console.log(`Solved: ${solution}`);
+        return solution;
+      }
+
+      solution += 1;
+    }
+  }
+
+  addBlock(transaction: Transaction, senderPublicKey: string, signature: Buffer) {
+    const verifier = crypto.createVerify('SHA256');
+    verifier.update(transaction.toString());
+
+    const isValid = verifier.verify(senderPublicKey, signature);
 
     if (isValid) {
       const newBlock = new Block(this.lastBlock.hash, transaction);
+      this.mine(newBlock.nonce);
       this.chain.push(newBlock);
     }
   }
 }
 
-// Wallet gives a user a public/private keypair
 class Wallet {
   public publicKey: string;
   public privateKey: string;
