@@ -1,0 +1,24 @@
+{
+  "name": "ts-blockchain",
+  "version": "1.0.0",
+  "description": "Very simple blockchain system",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tsc -w"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/salvobee/ts-blockchain.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/salvobee/ts-blockchain/issues"
+  },
+  "homepage": "https://github.com/salvobee/ts-blockchain#readme",
+  "devDependencies": {
+    "@types/node": "^16.11.10",
+    "typescript": "^4.5.2"
+  }
+}
