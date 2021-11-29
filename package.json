@@ -4,7 +4,9 @@
   "description": "Very simple blockchain system",
   "main": "index.js",
   "scripts": {
-    "dev": "tsc -w"
+    "build": "tsc",
+    "dev": "tsc -w",
+    "start": "node index.js"
   },
   "repository": {
     "type": "git",
